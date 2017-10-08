@@ -1,8 +1,0 @@
-*.py[co]
-*.sw[pon]
-duolingo_api.egg-info
-.tox/
-.coverage
-dev
-dev/*
-dist/
