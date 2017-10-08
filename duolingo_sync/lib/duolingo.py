@@ -24,7 +24,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 This file derived from [KartikTalwar's](https://github.com/KartikTalwar/)
 [Duolingo-API Python library](https://github.com/KartikTalwar/Duolingo/). With
 modifications by [JASchilz](https://github.com/JASchilz) to remove dependence
-on external libraries.
+on external libraries. See KartikTalwar's repository for documentation on this
+file.
 """
 
 import re
