@@ -8,7 +8,7 @@ from aqt.qt import *
 from anki.lang import _
 from anki.utils import splitFields
 
-import duolingo
+from lib import duolingo
 
 # We're going to add a menu item below. First we want to create a function to
 # be called when the menu item is activated.
