@@ -11,3 +11,15 @@ Start Anki and select Tools ~> Sync Duolingo. You will be prompted for your Duol
 
 Currently, the plugin will only sync cards from your *active* Duolingo language. This is the language that you last selected in Duolingo. To update your active language, log in to Duolingo and select the language that you would sync from your languages menu.
 
+## Getting Involved
+
+Feel free to open pull requests or issues. [GitHub](https://github.com/JASchilz/AnkiSyncDuolingo) is the canonical location of this project.
+
+Here's the general sequence of events for code contribution:
+
+1. Either:
+  * Identify an existing issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/) and comment that you'd like to try to resolve it.
+  * Open an issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/).
+2. Get acknowledgement/concurrence.
+3. Submit a pull request to resolve the issue. Include documentation, if appropriate.
+
