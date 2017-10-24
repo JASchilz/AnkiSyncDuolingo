@@ -18,8 +18,8 @@ Feel free to open pull requests or issues. [GitHub](https://github.com/JASchilz/
 Here's the general sequence of events for code contribution:
 
 1. Either:
-  * Identify an existing issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/) and comment that you'd like to try to resolve it.
-  * Open an issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/).
+    * Identify an existing issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/) and comment that you'd like to try to resolve it.
+    * Open an issue in the [issue tracker](https://github.com/JASchilz/AnkiSyncDuolingo/issues/).
 2. Get acknowledgement/concurrence.
 3. Submit a pull request to resolve the issue. Include documentation, if appropriate.
 
