@@ -46,8 +46,8 @@ def get_duolingo_deck():
 
 def sync_duolingo():
 
-    get_duolingo_model()  # Create the Duolingo model, if it doesn't already exist
-    get_duolingo_deck()  # Create the Duolingo deck, if it doesn't already exist
+    model = get_duolingo_model()
+    deck = get_duolingo_deck() 
 
     notes = mw.col.db.list("select flds from notes where mid = ?", model['id'])
     duolingo_gids = [splitFields(note)[0] for note in notes]
@@ -63,12 +63,8 @@ def sync_duolingo():
             language_string = response['language_string']
             vocabs = response['vocab_overview']
 
-            did = mw.col.decks.id("Duolingo")  # TODO: Decouple from deck name
-            mw.col.decks.select(did)
-
-            m = mw.col.models.byName("Duolingo Sync")  # TODO: Decouple from model name
-            deck = mw.col.decks.get(did)
-            deck['mid'] = m['id']
+            mw.col.decks.select(deck['id'])
+            deck['mid'] = model['id']
             mw.col.decks.save(deck)
 
             words_to_add = []
