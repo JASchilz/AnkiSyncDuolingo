@@ -11,7 +11,7 @@ from anki.utils import splitFields
 from lib import duolingo
 
 
-def getDuolingoModel():
+def get_duolingo_model():
 
     m = mw.col.models.byName("Duolingo Sync")
 
@@ -36,7 +36,7 @@ def getDuolingoModel():
     return m
 
 
-def getDuolingoDeck():
+def get_duolingo_deck():
     d = mw.col.decks.byName("Duolingo")
 
     if not d:
@@ -47,10 +47,10 @@ def getDuolingoDeck():
     return d
 
 
-def testFunction():
+def sync_duolingo():
 
-    model = getDuolingoModel()
-    deck = getDuolingoDeck()
+    model = get_duolingo_model()
+    deck = get_duolingo_deck()
 
     notes = mw.col.db.list("select flds from notes where mid = ?", model['id'])
     duolingo_gids = [splitFields(note)[0] for note in notes]
@@ -108,7 +108,7 @@ def testFunction():
 # create a new menu item, "test"
 action = QAction("Sync Duolingo", mw)
 # set it to call testFunction when it's clicked
-action.triggered.connect(testFunction)
+action.triggered.connect(sync_duolingo)
 # and add it to the tools menu
 mw.form.menuTools.addAction(action)
 
