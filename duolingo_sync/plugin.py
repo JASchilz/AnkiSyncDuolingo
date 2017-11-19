@@ -10,8 +10,6 @@ from anki.utils import splitFields
 
 from lib import duolingo
 
-# We're going to add a menu item below. First we want to create a function to
-# be called when the menu item is activated.
 
 def getDuolingoModel():
 
