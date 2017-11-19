@@ -1,8 +1,5 @@
-# import the main window object (mw) from aqt
 from aqt import mw
-# import the "show info" tool from utils.py
 from aqt.utils import showInfo, getText, askUser
-# import all of the Qt GUI library
 from aqt.qt import *
 
 from anki.lang import _
@@ -105,11 +102,8 @@ def sync_duolingo():
 
                         mw.col.addNote(n)
 
-# create a new menu item, "test"
 action = QAction("Sync Duolingo", mw)
-# set it to call testFunction when it's clicked
 action.triggered.connect(sync_duolingo)
-# and add it to the tools menu
 mw.form.menuTools.addAction(action)
 
 
