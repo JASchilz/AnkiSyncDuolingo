@@ -49,7 +49,8 @@ def sync_duolingo():
     model = get_duolingo_model()
     deck = get_duolingo_deck() 
 
-    notes = mw.col.db.list("select flds from notes where mid = ?", model['id'])
+    note_ids = mw.col.findNotes('tag:duolingo_sync')
+    notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
     duolingo_gids = [splitFields(note)[0] for note in notes]
 
     username = getText("Your Duolingo username:")[0]
