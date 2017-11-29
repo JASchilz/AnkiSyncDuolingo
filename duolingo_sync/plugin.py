@@ -90,6 +90,7 @@ def sync_duolingo():
                         n['Target'] = vocab['word_string']
 
                         n.addTag(language_string)
+                        n.addTag('duolingo_sync')
 
                         if vocab['pos']:
                             n.addTag(vocab['pos'])
