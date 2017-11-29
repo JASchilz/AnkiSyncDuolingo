@@ -74,7 +74,7 @@ def sync_duolingo():
                 if vocab['id'] not in duolingo_gids:
                     words_to_add.append(vocab)
 
-            if askUser("Add {} cards?".format(len(words_to_add))):
+            if askUser("Add {} notes?".format(len(words_to_add))):
 
                 word_chunks = [words_to_add[x:x + 50] for x in xrange(0, len(words_to_add), 50)]
 
