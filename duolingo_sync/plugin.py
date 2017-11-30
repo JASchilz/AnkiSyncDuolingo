@@ -33,21 +33,9 @@ def get_duolingo_model():
     return m
 
 
-def get_duolingo_deck():
-    d = mw.col.decks.byName("Duolingo")
-
-    if not d:
-        if askUser("Duolingo deck not found. Create?"):
-            mw.col.decks.id("Duolingo", create=True)
-
-    d = mw.col.decks.byName("Duolingo")
-    return d
-
-
 def sync_duolingo():
 
     model = get_duolingo_model()
-    deck = get_duolingo_deck() 
 
     note_ids = mw.col.findNotes('tag:duolingo_sync')
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
@@ -64,7 +52,10 @@ def sync_duolingo():
             language_string = response['language_string']
             vocabs = response['vocab_overview']
 
-            mw.col.decks.select(deck['id'])
+            did = mw.col.decks.id("Default")
+            mw.col.decks.select(did)
+ 
+            deck = mw.col.decks.get(did)
             deck['mid'] = model['id']
             mw.col.decks.save(deck)
 
