@@ -9,9 +9,7 @@ The connection to Duolingo's API is provided by [KartikTalwar's](https://github.
 To install, unzip the [latest release](https://github.com/JASchilz/AnkiSyncDuolingo/releases/latest/) directly into your Anki plugins directory. After unzipping, the `duolingo_sync.py` file and the `duolingo_sync` directory should both reside directly in your plugins directory.
 
 ## Use
-Start Anki and select Tools ~> Sync Duolingo. You will be prompted for your Duolingo username and password. If a Duolingo card type do not already exist then the plugin will create these for you and begin syncing your Duolingo words into Anki.
-
-The synced cards will be placed into your "Default" deck. The plugin will not yet refresh your deck screen once the sync has been completed: that's an open issue. For now, you will have to navigate into a deck and then back to the "Decks" tab to see the synced cards.
+Start Anki and select Tools ~> Sync Duolingo. You will be prompted for your Duolingo username and password. If a Duolingo card type do not already exist then the plugin will create these for you and begin syncing your Duolingo words into Anki. The synced cards will be placed into your "Default" deck. 
 
 At this point, you can move the cards to another deck of your choice. The cards are tagged with "duolingo_sync". This tag, plus the unique "GID" field on each note is what allows the plugin to identify all of the notes that have already been retrieved from Duolingo. Do not remove the tag, or change the GID.
 
