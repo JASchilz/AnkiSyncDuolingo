@@ -90,6 +90,7 @@ def sync_duolingo():
                         n.addTag(vocab['skill'])
 
                     mw.col.addNote(n)
+            mw.moveToState("deckBrowser")
 
 action = QAction("Sync Duolingo", mw)
 action.triggered.connect(sync_duolingo)
