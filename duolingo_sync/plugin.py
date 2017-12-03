@@ -5,7 +5,7 @@ from aqt.qt import *
 from anki.lang import _
 from anki.utils import splitFields, ids2str
 
-from lib import duolingo
+from lib import duolingo, duolingo_dialog
 
 
 def get_duolingo_model():
@@ -41,55 +41,55 @@ def sync_duolingo():
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
     duolingo_gids = [splitFields(note)[0] for note in notes]
 
-    username = getText("Your Duolingo username:")[0]
+    try:
+        username, password = duolingo_dialog(mw)
+    except TypeError:
+        return
 
-    if username:
-        password = getText("Your Duolingo password:")[0]
+    if username and password:
+        lingo = duolingo.Duolingo(username, password=password)
+        response = lingo.get_vocabulary()
+        language_string = response['language_string']
+        vocabs = response['vocab_overview']
 
-        if password:
-            lingo = duolingo.Duolingo(username, password=password)
-            response = lingo.get_vocabulary()
-            language_string = response['language_string']
-            vocabs = response['vocab_overview']
+        did = mw.col.decks.id("Default")
+        mw.col.decks.select(did)
 
-            did = mw.col.decks.id("Default")
-            mw.col.decks.select(did)
- 
-            deck = mw.col.decks.get(did)
-            deck['mid'] = model['id']
-            mw.col.decks.save(deck)
+        deck = mw.col.decks.get(did)
+        deck['mid'] = model['id']
+        mw.col.decks.save(deck)
 
-            words_to_add = []
-            for vocab in vocabs:
+        words_to_add = []
+        for vocab in vocabs:
 
-                if vocab['id'] not in duolingo_gids:
-                    words_to_add.append(vocab)
+            if vocab['id'] not in duolingo_gids:
+                words_to_add.append(vocab)
 
-            if askUser("Add {} notes?".format(len(words_to_add))):
+        if askUser("Add {} notes?".format(len(words_to_add))):
 
-                word_chunks = [words_to_add[x:x + 50] for x in xrange(0, len(words_to_add), 50)]
+            word_chunks = [words_to_add[x:x + 50] for x in xrange(0, len(words_to_add), 50)]
 
-                for word_chunk in word_chunks:
-                    translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
+            for word_chunk in word_chunks:
+                translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
 
-                    for vocab in word_chunk:
-                        n = mw.col.newNote()
+                for vocab in word_chunk:
+                    n = mw.col.newNote()
 
-                        n['Gid'] = vocab['id']
-                        n['Gender'] = vocab['gender'] if vocab['gender'] else ''
-                        n['Source'] = '; '.join(translations[vocab['word_string']])
-                        n['Target'] = vocab['word_string']
+                    n['Gid'] = vocab['id']
+                    n['Gender'] = vocab['gender'] if vocab['gender'] else ''
+                    n['Source'] = '; '.join(translations[vocab['word_string']])
+                    n['Target'] = vocab['word_string']
 
-                        n.addTag(language_string)
-                        n.addTag('duolingo_sync')
+                    n.addTag(language_string)
+                    n.addTag('duolingo_sync')
 
-                        if vocab['pos']:
-                            n.addTag(vocab['pos'])
+                    if vocab['pos']:
+                        n.addTag(vocab['pos'])
 
-                        if vocab['skill']:
-                            n.addTag(vocab['skill'])
+                    if vocab['skill']:
+                        n.addTag(vocab['skill'])
 
-                        mw.col.addNote(n)
+                    mw.col.addNote(n)
 
 action = QAction("Sync Duolingo", mw)
 action.triggered.connect(sync_duolingo)
