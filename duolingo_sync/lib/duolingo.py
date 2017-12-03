@@ -40,6 +40,10 @@ import urllib
 from cookielib import CookieJar
 
 
+class LoginFailedException(Exception):
+    pass
+
+
 class Struct:
 
     def __init__(self, **entries):
@@ -99,7 +103,7 @@ class Duolingo(object):
         if attempt.get('response') == 'OK':
             return True
 
-        raise Exception("Login failed")
+        raise LoginFailedException("Login failed")
 
     def get_activity_stream(self, before=None):
         if before:

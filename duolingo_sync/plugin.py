@@ -1,11 +1,13 @@
+import urllib2
+
 from aqt import mw
-from aqt.utils import showInfo, getText, askUser
+from aqt.utils import showInfo, getText, askUser, showWarning
 from aqt.qt import *
 
 from anki.lang import _
 from anki.utils import splitFields, ids2str
 
-from lib import duolingo, duolingo_dialog
+from lib import duolingo, duolingo_dialog, LoginFailedException
 
 
 def get_duolingo_model():
@@ -47,7 +49,16 @@ def sync_duolingo():
         return
 
     if username and password:
-        lingo = duolingo.Duolingo(username, password=password)
+
+        try:
+            lingo = duolingo.Duolingo(username, password=password)
+        except LoginFailedException:
+            showWarning("Loging in to Duolingo failed. Please check your Duolingo credentials.")
+            return
+        except urllib2.URLError:
+            showWarning("Could not connect to Duolingo. Please check your internet connection.")
+            return
+
         response = lingo.get_vocabulary()
         language_string = response['language_string']
         vocabs = response['vocab_overview']
@@ -64,11 +75,13 @@ def sync_duolingo():
 
             if vocab['id'] not in duolingo_gids:
                 words_to_add.append(vocab)
-
-        if askUser("Add {} notes?".format(len(words_to_add))):
+        if not words_to_add:
+            showInfo("Successfully logged in to Duolingo, but no new words found in {} language.".format(language_string))
+        elif askUser("Add {} notes from {} language?".format(len(words_to_add), language_string)):
 
             word_chunks = [words_to_add[x:x + 50] for x in xrange(0, len(words_to_add), 50)]
 
+            notes_added = 0
             for word_chunk in word_chunks:
                 translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
 
@@ -90,6 +103,9 @@ def sync_duolingo():
                         n.addTag(vocab['skill'])
 
                     mw.col.addNote(n)
+                    notes_added += 1
+
+            showInfo("{} notes added".format(notes_added))
             mw.moveToState("deckBrowser")
 
 action = QAction("Sync Duolingo", mw)
