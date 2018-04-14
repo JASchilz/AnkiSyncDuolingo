@@ -100,7 +100,7 @@ def sync_duolingo():
                         n.addTag(vocab['pos'])
 
                     if vocab['skill']:
-                        n.addTag(vocab['skill'])
+                        n.addTag(vocab['skill'].replace(' ', '-'))
 
                     mw.col.addNote(n)
                     notes_added += 1
