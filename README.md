@@ -1,3 +1,5 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/f41f309b1d86a357597b/maintainability)](https://codeclimate.com/github/JASchilz/AnkiSyncDuolingo/maintainability)
+
 # AnkiSyncDuolingo
 Pull your Duolingo vocabulary into Anki, as an Anki plugin This plugin works, but is under development. It is not yet available in the Anki plugin registry, but you can install it manually.
 
