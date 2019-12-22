@@ -1,1 +1,1 @@
-import plugin
+from duolingo_sync import plugin

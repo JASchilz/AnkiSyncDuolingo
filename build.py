@@ -11,15 +11,16 @@ def project_files(path):
 
 
 if __name__ == '__main__':
-    
-    with ZipFile('duolingo_sync.zip', 'w') as myzip:
-        myzip.write('duolingo_sync.py')
-        myzip.write('duolingo_sync')
-        myzip.write('README.md', 'duolingo_sync/README.md')
-        myzip.write('LICENSE.md', 'duolingo_sync/LICENSE.md')
+
+    with ZipFile('duolingo_sync.ankiaddon', 'w') as myzip:
+        myzip.write('manifest.json')
+        myzip.write('README.md')
+        myzip.write('LICENSE.md')
         
         for f in project_files('duolingo_sync'):
-            myzip.write(f)
+            zip_path = os.path.join(*f.split(os.path.sep)[1:])
+
+            myzip.write(f, zip_path)
 
 
 
