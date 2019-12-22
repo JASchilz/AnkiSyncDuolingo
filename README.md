@@ -27,9 +27,9 @@ After installing the addon and restarting Anki, you can now select the `Sync Duo
 
 ![Open the "Sync Duolingo" dialog](docs/sync_duolingo.png)
 
-If it's your first time using the addon, `Duolingo Sync` will ask your permission to create its custom note type. Then it will ask for your Duolingo credentials.
+If it's your first time using the addon, `Duolingo Sync` will ask your permission to create its custom note type.
 
-`Duolingo Sync` will only pull in Duolingo words that you've learned. As you learn more words in Duolingo, use the `Sync Duolingo` tool again to pull those new words into Anki.
+`Duolingo Sync` will then ask for your Duolingo credentials. The addon will only sync in Duolingo words that you've already learned. As you learn more words in Duolingo, use the `Sync Duolingo` tool again to pull those new words into Anki.
 
 ### Managing Notes
 
