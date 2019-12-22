@@ -1,14 +1,15 @@
-import urllib.request, urllib.error, urllib.parse
 import requests.exceptions
 
 from aqt import mw
-from aqt.utils import showInfo, getText, askUser, showWarning
+from aqt.utils import showInfo, askUser, showWarning
 from aqt.qt import *
 
 from anki.lang import _
 from anki.utils import splitFields, ids2str
 
-from .lib import duolingo, duolingo_dialog, LoginFailedException
+from .duolingo_dialog import duolingo_dialog
+from .duolingo import Duolingo, LoginFailedException
+
 
 
 def get_duolingo_model():
@@ -60,7 +61,7 @@ def sync_duolingo():
     if username and password:
 
         try:
-            lingo = duolingo.Duolingo(username, password=password)
+            lingo = Duolingo(username, password=password)
         except LoginFailedException:
             showWarning("Loging in to Duolingo failed. Please check your Duolingo credentials.")
             return

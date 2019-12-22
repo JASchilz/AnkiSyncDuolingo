@@ -1,1 +1,1 @@
-from duolingo_sync import plugin
+from . import plugin
