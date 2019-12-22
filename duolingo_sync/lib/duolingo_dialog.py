@@ -7,7 +7,7 @@ def duolingo_dialog(mw):
     d.setWindowModality(Qt.WindowModal)
     vbox = QVBoxLayout()
     l = QLabel("""
-    <p>This plugin will generate Anki notes and cards from your active Duolingo language. See the
+    <p>This plugin will generate Anki notes and cards from your <strong>active</strong> Duolingo language. See the
     <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a> for more information.</p>
 
     <p>Please enter your <strong>Duolingo</strong> username and password.</p>
