@@ -24,8 +24,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 This file derived from [KartikTalwar's](https://github.com/KartikTalwar/)
 [Duolingo-API Python library](https://github.com/KartikTalwar/Duolingo/). With
 modifications by [JASchilz](https://github.com/JASchilz) to remove dependence
-on external libraries. See KartikTalwar's repository for documentation on this
-file.
+on external libraries and allow login by e-mail address. See KartikTalwar's
+repository for documentation on this file.
 """
 
 
@@ -61,13 +61,14 @@ class Duolingo(object):
     def __init__(self, username, password=None):
         self.username = username
         self.password = password
-        self.user_url = "https://duolingo.com/users/%s" % self.username
         self.session = requests.Session()
         self.leader_data = None
         self.jwt = None
 
         if password:
             self._login()
+
+        self.user_url = "https://duolingo.com/users/%s" % self.username  ## JASchilz
 
         self.user_data = Struct(**self._get_data())
 
@@ -93,6 +94,7 @@ class Duolingo(object):
         attempt = request.json()
 
         if attempt.get('response') == 'OK':
+            self.username = attempt['username']  ## JASchilz
             self.jwt = request.headers['jwt']
             return True
 
