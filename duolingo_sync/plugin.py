@@ -28,12 +28,12 @@ def get_duolingo_model():
 
             t = mm.newTemplate("Card 1")
             t['qfmt'] = "{{Source}}<br>\n<br>\nTo {{Target Language}}:\n\n<hr id=answer>"
-            t['afmt'] = "{{FrontSide}}\n\n" + "{{Target}}"
+            t['afmt'] = "{{FrontSide}}\n\n<br><br>{{Target}}"
             mm.addTemplate(m, t)
 
             t = mm.newTemplate("Card 2")
             t['qfmt'] = "{{Target}}<br>\n<br>\nFrom {{Target Language}}:\n\n<hr id=answer>"
-            t['afmt'] = "{{FrontSide}}\n\n" + "{{Source}}"
+            t['afmt'] = "{{FrontSide}}\n\n<br><br>{{Source}}"
             mm.addTemplate(m, t)
 
             mm.add(m)
