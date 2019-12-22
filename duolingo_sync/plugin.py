@@ -25,20 +25,28 @@ def get_duolingo_model():
                 fm = mm.newField(_(fieldName))
                 mm.addField(m, fm)
 
-            t = mm.newTemplate(_("Card 1"))
-            t['qfmt'] = "{{" + _("Source") + "}}"
-            t['afmt'] = "{{FrontSide}}\n\n<hr id=answer>\n\n" + "{{" + _("Target") + "}}"
+            t = mm.newTemplate("Card 1")
+            t['qfmt'] = "{{Source}}<br>\n<br>\nTo {{Target Language}}:\n\n<hr id=answer>"
+            t['afmt'] = "{{FrontSide}}\n\n" + "{{Target}}"
             mm.addTemplate(m, t)
-            mm.add(m)
 
+            t = mm.newTemplate("Card 2")
+            t['qfmt'] = "{{Target}}<br>\n<br>\nFrom {{Target Language}}:\n\n<hr id=answer>"
+            t['afmt'] = "{{FrontSide}}\n\n" + "{{Source}}"
+            mm.addTemplate(m, t)
+
+            mm.add(m)
             mw.col.models.save(m)
 
     return m
 
 
 def sync_duolingo():
-
     model = get_duolingo_model()
+
+    if not model:
+        showWarning("Could not find or create Duolingo Sync note type.")
+        return
 
     note_ids = mw.col.findNotes('tag:duolingo_sync')
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
