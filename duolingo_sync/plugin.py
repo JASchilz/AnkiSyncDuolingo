@@ -11,7 +11,6 @@ from .duolingo_dialog import duolingo_dialog
 from .duolingo import Duolingo, LoginFailedException
 
 
-
 def get_duolingo_model():
 
     m = mw.col.models.byName("Duolingo Sync")
@@ -125,7 +124,7 @@ def sync_duolingo():
                         n.addTag(vocab['pos'])
 
                     if vocab['skill']:
-                        n.addTag(vocab['skill'])
+                        n.addTag(vocab['skill'].replace(" ", "-"))
 
                     mw.col.addNote(n)
                     notes_added += 1
