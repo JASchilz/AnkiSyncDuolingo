@@ -3,12 +3,16 @@ from aqt.qt import *
 
 def duolingo_dialog(mw):
     d = QDialog(mw)
-    d.setWindowTitle("Sync Duolingo")
+    d.setWindowTitle("Pull from Duolingo")
     d.setWindowModality(Qt.WindowModal)
     vbox = QVBoxLayout()
     l = QLabel("""
-    <p>This plugin will generate Anki notes and cards from your <strong>active</strong> Duolingo language. See the
-    <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a> for more information.</p>
+    <p>This plugin will make Anki notes and cards from the words you've learned in 
+    your <strong>active</strong> Duolingo language. As you learn more words in Duolingo, use
+    this tool again to pull those words into Anki.</p>
+    
+    <p>See the <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a>
+    for more information.</p>
 
     <p>Please enter your <strong>Duolingo</strong> username and password.</p>
     """)

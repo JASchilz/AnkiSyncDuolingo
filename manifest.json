@@ -1,5 +1,5 @@
 {
     "package": "duolingo_sync",
-    "name": "Duolingo Sync",
+    "name": "Pull from Duolingo",
     "conflicts": []
 }

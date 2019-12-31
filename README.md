@@ -1,35 +1,34 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/f41f309b1d86a357597b/maintainability)](https://codeclimate.com/github/JASchilz/AnkiSyncDuolingo/maintainability)
 
 # AnkiSyncDuolingo
-Pull your Duolingo vocabulary into Anki 2.1.
+Pull words you've learned from Duolingo into Anki 2.1.
 
 ## Installing
 
-### Manual
+### Manually
 
 To install manually, download `duolingo_sync.ankiaddon` from the [latest release](https://github.com/JASchilz/AnkiSyncDuolingo/releases/latest/). You can then use Anki's `Tools` -> `Add-ons` -> `Install from file...` and select the `duolingo_sync.ankiaddon` file to install this plugin.
 
-### Anki Addon Repository
+### From the Anki Add-on Repository
 
-Instructions to follow.
+In Anki, select `Tools` -> `Add-ons` -> `Get Add-ons` and then enter the code from the bottom of this addo-on's [Anki Add-On Repository page](https://ankiweb.net/shared/info/557761805)
 
 ## Use
 
 ### Select Your Language in Duolingo
 
-The `Duolingo Sync` plugin will download words from your *active* Duolingo language: whatever language you have most recently selected for learning. You can change your active language using the Duolingo mobile app or web application:
+The `Pull from Duolingo` plugin will download words from your *active* Duolingo language: whatever language you have most recently selected for learning. You can change your active language using the Duolingo mobile app or web application:
 
 ![Select your language in the Duolingo application](docs/select_language.png)
 
-### Sync Duolingo
+### Pull from Duolingo
 
-After installing the addon and restarting Anki, you can now select the `Sync Duolingo` dialog from the `Tools` menu in Anki:
+After installing the addon and restarting Anki, you can now select the `Pull from Duolingo` dialog from the `Tools` menu in Anki.
 
-![Open the "Sync Duolingo" dialog](docs/sync_duolingo.png)
+If it's your first time using the addon, `Pull from Duolingo` will ask your permission to create its custom note type.
 
-If it's your first time using the addon, `Duolingo Sync` will ask your permission to create its custom note type.
+`Pull from Duolingo` will then ask for your Duolingo credentials. The addon will only sync in Duolingo words that you've already learned. As you learn more words in Duolingo, use the `Sync Duolingo` tool again to pull those new words into Anki.
 
-`Duolingo Sync` will then ask for your Duolingo credentials. The addon will only sync in Duolingo words that you've already learned. As you learn more words in Duolingo, use the `Sync Duolingo` tool again to pull those new words into Anki.
+**This add-on will only pull in words that you've already learned**. As you learn more words in Duolingo, use this add-on again to pull those words in Anki.
 
 ### Managing Notes
 

@@ -137,7 +137,7 @@ def sync_duolingo():
 
             mw.progress.finish()
 
-action = QAction("Sync Duolingo", mw)
+action = QAction("Pull from Duolingo", mw)
 action.triggered.connect(sync_duolingo)
 mw.form.menuTools.addAction(action)
 
