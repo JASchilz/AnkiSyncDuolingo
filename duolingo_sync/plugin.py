@@ -4,45 +4,15 @@ from aqt import mw
 from aqt.utils import showInfo, askUser, showWarning
 from aqt.qt import *
 
-from anki.lang import _
 from anki.utils import splitFields, ids2str
 
 from .duolingo_dialog import duolingo_dialog
 from .duolingo import Duolingo, LoginFailedException
-
-
-def get_duolingo_model():
-
-    m = mw.col.models.byName("Duolingo Sync")
-
-    if not m:
-        if askUser("Duolingo Sync note type not found. Create?"):
-
-            mm = mw.col.models
-            m = mm.new(_("Duolingo Sync"))
-
-            for fieldName in ["Gid", "Gender", "Source", "Target", "Target Language"]:
-                fm = mm.newField(_(fieldName))
-                mm.addField(m, fm)
-
-            t = mm.newTemplate("Card 1")
-            t['qfmt'] = "{{Source}}<br>\n<br>\nTo {{Target Language}}:\n\n<hr id=answer>"
-            t['afmt'] = "{{FrontSide}}\n\n<br><br>{{Target}}"
-            mm.addTemplate(m, t)
-
-            t = mm.newTemplate("Card 2")
-            t['qfmt'] = "{{Target}}<br>\n<br>\nFrom {{Target Language}}:\n\n<hr id=answer>"
-            t['afmt'] = "{{FrontSide}}\n\n<br><br>{{Source}}"
-            mm.addTemplate(m, t)
-
-            mm.add(m)
-            mw.col.models.save(m)
-
-    return m
+from .duolingo_model import get_duolingo_model
 
 
 def sync_duolingo():
-    model = get_duolingo_model()
+    model = get_duolingo_model(mw)
 
     if not model:
         showWarning("Could not find or create Duolingo Sync note type.")
@@ -58,7 +28,6 @@ def sync_duolingo():
         return
 
     if username and password:
-
         try:
             lingo = Duolingo(username, password=password)
         except LoginFailedException:
@@ -92,11 +61,8 @@ def sync_duolingo():
         deck['mid'] = model['id']
         mw.col.decks.save(deck)
 
-        words_to_add = []
-        for vocab in vocabs:
+        words_to_add = [vocab for vocab in vocabs if vocab['id'] not in duolingo_gids]
 
-            if vocab['id'] not in duolingo_gids:
-                words_to_add.append(vocab)
         if not words_to_add:
             showInfo("Successfully logged in to Duolingo, but no new words found in {} language.".format(language_string))
         elif askUser("Add {} notes from {} language?".format(len(words_to_add), language_string)):
