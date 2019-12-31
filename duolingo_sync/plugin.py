@@ -1,4 +1,5 @@
 import requests.exceptions
+import time
 
 from aqt import mw
 from aqt.utils import showInfo, askUser, showWarning
@@ -9,6 +10,7 @@ from anki.utils import splitFields, ids2str
 from .duolingo_dialog import duolingo_dialog
 from .duolingo import Duolingo, LoginFailedException
 from .duolingo_model import get_duolingo_model
+from .duolingo_thread import DuolingoThread
 
 
 def sync_duolingo():
@@ -20,7 +22,7 @@ def sync_duolingo():
 
     note_ids = mw.col.findNotes('tag:duolingo_sync')
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
-    duolingo_gids = [splitFields(note)[0] for note in notes]
+    gids_to_notes = {splitFields(note)[0]: note for note in notes}
 
     try:
         username, password = duolingo_dialog(mw)
@@ -29,7 +31,23 @@ def sync_duolingo():
 
     if username and password:
         try:
-            lingo = Duolingo(username, password=password)
+            mw.progress.start(immediate=True, label="Logging in...")
+
+            login_thread = DuolingoThread(target=Duolingo, args=(username, password))
+            login_thread.start()
+            while login_thread.is_alive():
+                time.sleep(.02)
+                mw.progress.update()
+            lingo = login_thread.join()
+
+            vocabulary_thread = DuolingoThread(target=lingo.get_vocabulary)
+            vocabulary_thread.start()
+            mw.progress.update(label="Retrieving vocabulary...")
+            while vocabulary_thread.is_alive():
+                time.sleep(.02)
+                mw.progress.update()
+            vocabulary_response = vocabulary_thread.join()
+
         except LoginFailedException:
             showWarning(
                 """
@@ -49,10 +67,11 @@ def sync_duolingo():
         except requests.exceptions.ConnectionError:
             showWarning("Could not connect to Duolingo. Please check your internet connection.")
             return
+        finally:
+            mw.progress.finish()
 
-        response = lingo.get_vocabulary()
-        language_string = response['language_string']
-        vocabs = response['vocab_overview']
+        language_string = vocabulary_response['language_string']
+        vocabs = vocabulary_response['vocab_overview']
 
         did = mw.col.decks.id("Default")
         mw.col.decks.select(did)
@@ -61,7 +80,7 @@ def sync_duolingo():
         deck['mid'] = model['id']
         mw.col.decks.save(deck)
 
-        words_to_add = [vocab for vocab in vocabs if vocab['id'] not in duolingo_gids]
+        words_to_add = [vocab for vocab in vocabs if vocab['id'] not in gids_to_notes]
 
         if not words_to_add:
             showInfo("Successfully logged in to Duolingo, but no new words found in {} language.".format(language_string))
