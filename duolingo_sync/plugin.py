@@ -1,5 +1,6 @@
 import requests.exceptions
 import time
+from collections import defaultdict
 
 from aqt import mw
 from aqt.utils import showInfo, askUser, showWarning
@@ -9,12 +10,15 @@ from anki.utils import splitFields, ids2str
 
 from .duolingo_dialog import duolingo_dialog
 from .duolingo import Duolingo, LoginFailedException
-from .duolingo_model import get_duolingo_model
+from .duolingo_model import get_duolingo_model, get_duolingo_model_with_pronunciation
 from .duolingo_thread import DuolingoThread
 
 
 def sync_duolingo():
-    model = get_duolingo_model(mw)
+    if askUser("Add pronunciation?"):
+        model = get_duolingo_model_with_pronunciation(mw)
+    else:
+        model = get_duolingo_model(mw)
 
     if not model:
         showWarning("Could not find or create Duolingo Sync note type.")
@@ -23,7 +27,6 @@ def sync_duolingo():
     note_ids = mw.col.findNotes('tag:duolingo_sync')
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
     gids_to_notes = {splitFields(note)[0]: note for note in notes}
-
     try:
         username, password = duolingo_dialog(mw)
     except TypeError:
@@ -94,14 +97,18 @@ def sync_duolingo():
                 translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
 
                 for vocab in word_chunk:
+                    
                     n = mw.col.newNote()
+                    
+                    # Update the underlying dictionary to accept more arguments for more customisable cards 
+                    n._fmap = defaultdict(str, n._fmap)
 
                     n['Gid'] = vocab['id']
                     n['Gender'] = vocab['gender'] if vocab['gender'] else ''
                     n['Source'] = '; '.join(translations[vocab['word_string']])
                     n['Target'] = vocab['word_string']
+                    n['Pronunciation'] = vocab['normalized_string']
                     n['Target Language'] = language_string
-
                     n.addTag(language_string)
                     n.addTag('duolingo_sync')
 
