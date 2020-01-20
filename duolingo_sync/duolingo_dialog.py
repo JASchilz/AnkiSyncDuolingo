@@ -11,8 +11,11 @@ def duolingo_dialog(mw):
     your <strong>active</strong> Duolingo language. As you learn more words in Duolingo, use
     this tool again to pull those words into Anki.</p>
     
-    <p>See the <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a>
-    for more information.</p>
+    <p>The cards and notes created by this plugin are customizable, and some languages may
+    include <u>pronunciation</u> or <u>gender</u> that you can add to your cards. See the
+    <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a> for more information.</p>
+    
+    <hr>
 
     <p>Please enter your <strong>Duolingo</strong> username and password.</p>
     """)
