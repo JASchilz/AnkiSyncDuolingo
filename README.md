@@ -38,6 +38,8 @@ If it's your first time using the addon, `Pull from Duolingo` will ask your perm
 
 By all means, edit the notes to your liking after they are imported into Anki. For example, you may wish to replace the text from your native-language with an image or images.
 
+Depending on the language you are studying, these notes may have helpful `{{ gender }}` or `{{ pronunciation }}` fields. You can browse your notes to see if this information is included, and add it to your cards if you like. For example, adding `{{ pronunciation }}` might be helpful if you're studying a language like Chinese with a non-Latin script.
+
 The only editing you _can't_ do is changing the `Gid` attribute or removing the `duolingo_sync` tag: the addon uses these to uniquely identify words from Duolingo and avoid importing a words into multiple notes.
 
 ## Etc.
