@@ -90,6 +90,7 @@ def sync_duolingo():
 
             mw.progress.start(immediate=True, label="Importing from Duolingo...", max=len(words_to_add))
             notes_added = 0
+            problem_vocabs = []
             for word_chunk in word_chunks:
                 translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
 
@@ -115,15 +116,25 @@ def sync_duolingo():
                     if vocab['skill']:
                         n.addTag(vocab['skill'].replace(" ", "-"))
 
-                    mw.col.addNote(n)
-                    notes_added += 1
+                    num_cards = mw.col.addNote(n)
+
+                    if num_cards:
+                        notes_added += 1
+                    else:
+                        problem_vocabs.append(vocab['word_string'])
 
                     mw.progress.update(value=notes_added)
 
-            showInfo("{} notes added".format(notes_added))
-            mw.moveToState("deckBrowser")
+            message = "{} notes added.".format(notes_added)
+
+            if problem_vocabs:
+                message += " Failed to add: " + ", ".join(problem_vocabs)
 
             mw.progress.finish()
+            
+            showInfo(message)
+
+            mw.moveToState("deckBrowser")
 
 action = QAction("Pull from Duolingo", mw)
 action.triggered.connect(sync_duolingo)
