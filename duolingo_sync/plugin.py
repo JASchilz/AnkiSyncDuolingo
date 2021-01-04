@@ -1,6 +1,8 @@
 import requests.exceptions
 import time
 from collections import defaultdict
+import json
+import os
 
 from aqt import mw
 from aqt.utils import showInfo, askUser, showWarning
@@ -88,11 +90,18 @@ def sync_duolingo():
 
             word_chunks = [words_to_add[x:x + 50] for x in range(0, len(words_to_add), 50)]
 
+            f = open(os.path.join(os.path.dirname(__file__), "log.txt"), "w")
+
             mw.progress.start(immediate=True, label="Importing from Duolingo...", max=len(words_to_add))
+            f.write("Beginning import:\n")
+            f.write(json.dumps(words_to_add))
+            f.write("\nChunked to:" + json.dumps(word_chunks))
+            f.write("\n\n")
             notes_added = 0
             problem_vocabs = []
             for word_chunk in word_chunks:
                 translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
+                f.write("\nGot translation: \n" + json.dumps(translations) + "\n")
 
                 for vocab in word_chunk:
                     
@@ -130,11 +139,14 @@ def sync_duolingo():
             if problem_vocabs:
                 message += " Failed to add: " + ", ".join(problem_vocabs)
 
+            f.close()
+
             mw.progress.finish()
-            
+
             showInfo(message)
 
             mw.moveToState("deckBrowser")
+
 
 action = QAction("Pull from Duolingo", mw)
 action.triggered.connect(sync_duolingo)
