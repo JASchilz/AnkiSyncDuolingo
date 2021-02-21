@@ -92,7 +92,20 @@ def sync_duolingo():
             notes_added = 0
             problem_vocabs = []
             for word_chunk in word_chunks:
+                lexeme_ids = {vocab['word_string']: vocab['id'] for vocab in word_chunk}
                 translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
+
+                # The `get_translations` endpoint might not always return a translation. In this case, try
+                # a couple of fallback methods
+                for word_string, translation in translations.items():
+                    if not translation:
+                        fallback_translation = "Translation not found for '{}'.".format(word_string)
+                        try:
+                            new_translation = lingo.get_word_definition_by_id(lexeme_ids[word_string])['translations']
+                        except Exception:
+                            new_translation = fallback_translation
+
+                        translations[word_string] = [new_translation if new_translation else fallback_translation]
 
                 for vocab in word_chunk:
                     
