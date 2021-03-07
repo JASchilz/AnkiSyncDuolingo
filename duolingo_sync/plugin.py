@@ -99,7 +99,7 @@ def sync_duolingo():
                 # a couple of fallback methods
                 for word_string, translation in translations.items():
                     if not translation:
-                        fallback_translation = "Translation not found for '{}'.".format(word_string)
+                        fallback_translation = "Translation not found for '{}'. Edit this card to add it.".format(word_string)
                         try:
                             new_translation = lingo.get_word_definition_by_id(lexeme_ids[word_string])['translations']
                         except Exception:

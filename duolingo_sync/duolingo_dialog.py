@@ -15,6 +15,11 @@ def duolingo_dialog(mw):
     include <u>pronunciation</u> or <u>gender</u> that you can add to your cards. See the
     <a href="https://github.com/JASchilz/AnkiSyncDuolingo/">project page</a> for more information.</p>
     
+    <p>Encounter a problem? Sometimes Duolingo makes changes to its servers that might require you to
+    upgrade the plugin. See the list of <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues?q=is%3Aissue+is%3Aclosed">
+    solved</a> and <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues">unsolved</a> issues. You're invited
+    to comment or add new issues.</p>
+    
     <hr>
 
     <p>Please enter your <strong>Duolingo</strong> username and password.</p>
