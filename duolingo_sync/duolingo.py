@@ -93,7 +93,7 @@ class Duolingo(object):
         request = self._make_req(login_url, data)
         attempt = request.json()
 
-        if attempt.get('response') == 'OK':
+        if 'failure' not in attempt:
             self.username = attempt['username']  ## JASchilz
             self.jwt = request.headers['jwt']
             return True
