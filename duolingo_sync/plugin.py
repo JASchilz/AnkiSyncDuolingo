@@ -5,14 +5,137 @@ from collections import defaultdict
 from aqt import mw
 from aqt.utils import showInfo, askUser, showWarning
 from aqt.qt import *
+import aqt
+from anki.collection import Collection
+from aqt.operations import QueryOp
+from aqt.utils import showInfo
+from aqt import mw
+# import the main window object (mw) from aqt
+from aqt import mw
+# import the "show info" tool from utils.py
+from aqt.utils import showInfo, qconnect
+# import all of the Qt GUI library
+from aqt.qt import *
+from dataclasses import dataclass
 
 from anki.utils import splitFields, ids2str
 
-from .duolingo_dialog import duolingo_dialog
+from .duolingo_display_login_dialog import duolingo_display_login_dialog
 from .duolingo import Duolingo, LoginFailedException
 from .duolingo_model import get_duolingo_model
 from .duolingo_thread import DuolingoThread
 
+
+def init(mw):
+    model = get_duolingo_model(mw)
+
+    if not model:
+        showWarning("Could not find or create Duolingo Sync note type.")
+        return
+
+    note_ids = mw.col.findNotes('tag:duolingo_sync')
+    notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
+    gids_to_notes = {splitFields(note)[0]: note for note in notes}
+
+    return gids_to_notes
+
+
+def login_and_retrieve_vocab(username, password):
+    model = get_duolingo_model(mw)
+
+    note_ids = mw.col.findNotes('tag:duolingo_sync')
+    notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
+    gids_to_notes = {splitFields(note)[0]: note for note in notes}
+
+    try:
+        aqt.mw.taskman.run_on_main(
+            lambda: aqt.mw.progress.update(
+                label=f"Logging in...",
+            )
+        )
+
+        lingo = Duolingo(username, password)
+
+        aqt.mw.taskman.run_on_main(
+            lambda: aqt.mw.progress.update(
+                label=f"Retrieving vocabulary...",
+            )
+        )
+        vocabulary_response = lingo.get_vocabulary()
+
+    except LoginFailedException:
+        aqt.mw.taskman.run_on_main(
+            lambda: showWarning(
+                """
+                <p>Logging in to Duolingo failed. Please check your Duolingo credentials.</p>
+
+                <p>Having trouble logging in? You must use your <i>Duolingo</i> username and password.
+                You <i>can't</i> use your Google or Facebook credentials, even if that's what you use to
+                sign in to Duolingo.</p>
+
+                <p>You can find your Duolingo username at
+                <a href="https://www.duolingo.com/settings">https://www.duolingo.com/settings</a> and you
+                can create or set your Duolingo password at
+                <a href="https://www.duolingo.com/settings/password">https://www.duolingo.com/settings/password</a>.</p>
+                """
+            )
+        )
+        return
+    except requests.exceptions.ConnectionError:
+        aqt.mw.taskman.run_on_main(
+            lambda: showWarning("Could not connect to Duolingo. Please check your internet connection.")
+        )
+        return
+
+    language_string = vocabulary_response['language_string']
+    vocabs = vocabulary_response['vocab_overview']
+
+    did = mw.col.decks.id("Default")
+    mw.col.decks.select(did)
+
+    deck = mw.col.decks.get(did)
+    deck['mid'] = model['id']
+    mw.col.decks.save(deck)
+
+    words_to_add = [vocab for vocab in vocabs if vocab['id'] not in gids_to_notes]
+    aqt.mw.taskman.run_on_main(
+        lambda: showInfo(f"Found {len(words_to_add)} from {language_string}.")
+    )
+
+    return words_to_add
+
+def on_success(*args, **kwargs) -> None:
+    showInfo(f"my_background_op() returned.")
+
+
+def new_sync_duolingo():
+    # gids_to_notes = init(mw)
+    #
+    # try:
+    #     username, password = duolingo_display_login_dialog(mw)
+    # except TypeError:
+    #     return
+    #
+    # if not username or not password:
+    #     return
+
+    username = "foo"
+    password = "bar"
+
+    op = QueryOp(
+        # the active window (main window in this case)
+        parent=mw,
+        # the operation is passed the collection for convenience; you can
+        # ignore it if you wish
+        op=lambda col: login_and_retrieve_vocab(username, password),
+        # this function will be called if op completes successfully,
+        # and it is given the return value of the op
+        success=lambda *args, **kwargs: on_success,
+    )
+
+    # if with_progress() is not called, no progress window will be shown.
+    # note: QueryOp.with_progress() was broken until Anki 2.1.50
+    op.with_progress().run_in_background()
 
 def sync_duolingo():
     model = get_duolingo_model(mw)
@@ -25,7 +148,7 @@ def sync_duolingo():
     notes = mw.col.db.list("select flds from notes where id in {}".format(ids2str(note_ids)))
     gids_to_notes = {splitFields(note)[0]: note for note in notes}
     try:
-        username, password = duolingo_dialog(mw)
+        username, password = duolingo_display_login_dialog(mw)
     except TypeError:
         return
 
@@ -52,11 +175,11 @@ def sync_duolingo():
             showWarning(
                 """
                 <p>Logging in to Duolingo failed. Please check your Duolingo credentials.</p>
-                
+
                 <p>Having trouble logging in? You must use your <i>Duolingo</i> username and password.
                 You <i>can't</i> use your Google or Facebook credentials, even if that's what you use to
                 sign in to Duolingo.</p>
-                
+
                 <p>You can find your Duolingo username at
                 <a href="https://www.duolingo.com/settings">https://www.duolingo.com/settings</a> and you
                 can create or set your Duolingo password at
@@ -108,10 +231,10 @@ def sync_duolingo():
                         translations[word_string] = [new_translation if new_translation else fallback_translation]
 
                 for vocab in word_chunk:
-                    
+
                     n = mw.col.newNote()
-                    
-                    # Update the underlying dictionary to accept more arguments for more customisable cards 
+
+                    # Update the underlying dictionary to accept more arguments for more customisable cards
                     n._fmap = defaultdict(str, n._fmap)
 
                     n['Gid'] = vocab['id']
@@ -150,8 +273,64 @@ def sync_duolingo():
             mw.moveToState("deckBrowser")
 
 
+# action = QAction("Pull from Duolingo", mw)
+# qconnect(action.triggered, new_sync_duolingo)
+# mw.form.menuTools.addAction(action)
+
+
+import aqt
+from anki.collection import Collection
+from aqt.operations import QueryOp
+from aqt.utils import showInfo
+from aqt import mw
+# import the main window object (mw) from aqt
+from aqt import mw
+# import the "show info" tool from utils.py
+from aqt.utils import showInfo, qconnect
+# import all of the Qt GUI library
+from aqt.qt import *
+
+import time
+
+# def my_background_op(col: Collection, note_ids: list[int]) -> int:
+def my_background_op(s: str):
+
+        for i in range(10):
+            aqt.mw.taskman.run_on_main(
+                lambda: aqt.mw.progress.update(
+                    label=f"Remaining {s}:",
+                    value=i,
+                    max=10,
+                )
+            )
+            time.sleep(.5)
+
+        return True
+
+# def my_ui_action(note_ids: list[int]):
+def my_ui_action():
+    try:
+        username, password = duolingo_display_login_dialog(mw)
+    except TypeError:
+        return
+
+    op_1 = QueryOp(
+        # the active window (main window in this case)
+        parent=mw,
+        # the operation is passed the collection for convenience; you can
+        # ignore it if you wish
+        op=lambda col: login_and_retrieve_vocab(username, password),
+        # op=lambda col: my_background_op("foo"),
+        # this function will be called if op completes successfully,
+        # and it is given the return value of the op
+        success=on_success,
+    )
+
+    # if with_progress() is not called, no progress window will be shown.
+    # note: QueryOp.with_progress() was broken until Anki 2.1.50
+    op.with_progress().run_in_background()
+
 action = QAction("Pull from Duolingo", mw)
-action.triggered.connect(sync_duolingo)
+qconnect(action.triggered, my_ui_action)
+# action.triggered.connect(my_ui_action)
 mw.form.menuTools.addAction(action)
-
-

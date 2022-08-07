@@ -1,7 +1,7 @@
 from aqt.qt import *
 
 
-def duolingo_dialog(mw):
+def duolingo_display_login_dialog(mw):
     d = QDialog(mw)
     d.setWindowTitle("Pull from Duolingo")
     d.setWindowModality(Qt.WindowModal)
