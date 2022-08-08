@@ -26,7 +26,7 @@ from .duolingo import Duolingo, LoginFailedException
 from .duolingo_model import get_duolingo_model
 from .duolingo_thread import DuolingoThread
 
-WORD_CHUNK_SIZE = 20
+WORD_CHUNK_SIZE = 50
 ADD_STATUS_TEMPLATE = "Importing from Duolingo: {} of {} complete."
 
 
