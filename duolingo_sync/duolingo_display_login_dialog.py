@@ -1,7 +1,7 @@
 from aqt.qt import *
 
 
-def duolingo_dialog(mw):
+def duolingo_display_login_dialog(mw):
     d = QDialog(mw)
     d.setWindowTitle("Pull from Duolingo")
     d.setWindowModality(Qt.WindowModal)
@@ -17,8 +17,10 @@ def duolingo_dialog(mw):
     
     <p>Encounter a problem? Sometimes Duolingo makes changes to its servers that might require you to
     upgrade the plugin. See the list of <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues?q=is%3Aissue+is%3Aclosed">
-    solved</a> and <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues">unsolved</a> issues. You're invited
-    to comment or add new issues.</p>
+    solved</a> and <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues">unsolved</a> issues. If you're having
+    a language with a translations in a specific language, see the list of <a href="https://github.com/JASchilz/AnkiSyncDuolingo/labels/language-specific">
+    language specific</a> issues. You can also see a list of <a href="https://github.com/JASchilz/AnkiSyncDuolingo/labels/feature-request">feature requests</a>.
+    You're invited to comment or add new issues.</p>
     
     <hr>
 
