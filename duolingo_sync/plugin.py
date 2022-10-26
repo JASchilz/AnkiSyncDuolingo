@@ -124,20 +124,19 @@ def add_vocab(retrieve_result: VocabRetrieveResult) -> AddVocabResult:
 
     words_processed = 0
     for word_chunk in word_chunks:
-        lexeme_ids = {vocab['word_string']: vocab['id'] for vocab in word_chunk}
+        needs_capitalization = set()
         translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
-
         # The `get_translations` endpoint might not always return a translation. In this case, try
         # a couple of fallback methods
         for word_string, translation in translations.items():
+            fallback_translation = "Translation not found for '{}'. Edit this card to add it.".format(word_string)
             if not translation:
-                fallback_translation = "Translation not found for '{}'. Edit this card to add it.".format(word_string)
-                try:
-                    new_translation = lingo.get_word_definition_by_id(lexeme_ids[word_string])['translations']
-                except Exception:
-                    new_translation = fallback_translation
-
-                translations[word_string] = [new_translation if new_translation else fallback_translation]
+                _, new_translation = dict(lingo.get_translations([word_string.capitalize()])).popitem()
+                if new_translation:
+                    needs_capitalization.add(word_string)
+                    translations[word_string] = new_translation
+                else:
+                    translations[word_string] = fallback_translation
 
         for vocab in word_chunk:
             n = mw.col.newNote()
@@ -148,7 +147,7 @@ def add_vocab(retrieve_result: VocabRetrieveResult) -> AddVocabResult:
             n['Gid'] = vocab['id']
             n['Gender'] = vocab['gender'] if vocab['gender'] else ''
             n['Source'] = '; '.join(translations[vocab['word_string']])
-            n['Target'] = vocab['word_string']
+            n['Target'] = vocab['word_string'].capitalize() if vocab["word_string"] in needs_capitalization else vocab['word_string']
             n['Pronunciation'] = vocab['normalized_string'].strip()
             n['Target Language'] = retrieve_result.language_string
             n.addTag(retrieve_result.language_string)
