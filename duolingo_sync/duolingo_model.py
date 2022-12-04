@@ -27,19 +27,26 @@ def create_model(mw):
     return m
 
 
-def get_duolingo_model(mw):
+def get_duolingo_model(aqt):
+    mw = aqt.mw
     m = mw.col.models.byName(_model_name)
     if not m:
-        showInfo("Duolingo Sync note type not found. Creating.")
+        aqt.mw.taskman.run_on_main(
+            lambda: aqt.mw.progress.update(
+                label="Duolingo Sync note type not found. Creating..."
+            )
+        )
         m = create_model(mw)
 
     # Add new fields if they don't exist yet
     fields_to_add = [field_name for field_name in _field_names if field_name not in mw.col.models.fieldNames(m)]
     if fields_to_add:
-        showInfo("""
-        <p>The Duolingo Sync plugin has recently been upgraded to include the following attributes: {}</p>
-        <p>This change will require a full-sync of your card database to your Anki-Web account.</p>
-        """.format(", ".join(fields_to_add)))
+        aqt.mw.taskman.run_on_main(
+            lambda: showInfo("""
+                <p>The Duolingo Sync plugin has recently been upgraded to include the following attributes: {}</p>
+                <p>This change will require a full-sync of your card database to your Anki-Web account.</p>
+                """.format(", ".join(fields_to_add)))
+            )
         for field_name in fields_to_add:
             pass
             fm = mw.col.models.newField(_(field_name))

@@ -22,6 +22,10 @@ def duolingo_display_login_dialog(mw):
     language specific</a> issues. You can also see a list of <a href="https://github.com/JASchilz/AnkiSyncDuolingo/labels/feature-request">feature requests</a>.
     You're invited to comment or add new issues.</p>
     
+    <p><strong>Due to recent changes in the Duolingo service, this plugin is unable to provide translations for your vocabulary.</strong>
+    You can edit in the translations on your first review. See <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues/61">this support issue</a>
+    for more information.</p>
+    
     <hr>
 
     <p>Please enter your <strong>Duolingo</strong> username and password.</p>
