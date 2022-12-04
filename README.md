@@ -1,8 +1,8 @@
 
 # AnkiSyncDuolingo
-Pull words you've learned from Duolingo into Anki 2.1.
+Pull words you've learned from Duolingo into Anki 2.1.50+
 
-🔴 **NOTICE**: As of 11/20/2022 this plugin is currently broken by a recent change to the Duolingo service. Because of the holidays, I might not be able to seriously investigate the issue before 12/03/2022. Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/59 for more information. 🔴
+🔴 **NOTICE**: Because of recent changes to the Duolingo service, this plugin is no longer able to retrieve translations from Duolingo. Because of the holidays, Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/61 for more information. 🔴
 
 ## Installing
 
