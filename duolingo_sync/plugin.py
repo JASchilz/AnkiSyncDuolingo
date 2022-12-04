@@ -153,20 +153,10 @@ def add_vocab(retrieve_result: VocabRetrieveResult) -> AddVocabResult:
 
     words_processed = 0
     for word_chunk in word_chunks:
-        lexeme_ids = {vocab['word_string']: vocab['id'] for vocab in word_chunk}
-        translations = lingo.get_translations([vocab['word_string'] for vocab in word_chunk])
-
-        # The `get_translations` endpoint might not always return a translation. In this case, try
-        # a couple of fallback methods
-        for word_string, translation in translations.items():
-            if not translation:
-                fallback_translation = "Translation not found for '{}'. Edit this card to add it.".format(word_string)
-                try:
-                    new_translation = lingo.get_word_definition_by_id(lexeme_ids[word_string])['translations']
-                except Exception:
-                    new_translation = fallback_translation
-
-                translations[word_string] = [new_translation if new_translation else fallback_translation]
+        translations = {
+            vocab['word_string']: ["Provide the translation for '{}' from {}.".format(vocab['word_string'], retrieve_result.language_string)]
+            for vocab in word_chunk
+        }
 
         for vocab in word_chunk:
             n = mw.col.newNote()
