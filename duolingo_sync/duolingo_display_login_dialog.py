@@ -4,7 +4,7 @@ from aqt import AnkiQt
 from aqt.qt import *
 
 def duolingo_display_login_dialog(mw: AnkiQt):
-    d = QDialog(mw)
+    d = QDialog()
     d.setWindowTitle("Pull from Duolingo")
     d.setWindowModality(Qt.WindowModality.WindowModal)
     d.resize(1024, 768)
