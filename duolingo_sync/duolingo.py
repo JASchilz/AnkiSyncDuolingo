@@ -58,11 +58,7 @@ class LoginFailedException(Exception):
 
 
 class Duolingo(object):
-    def __init__(self, username, jwt=None):
-        # Consoles typically print this with a wrapping `'` character
-        jwt = jwt.replace("'", '')
-
-        self.username = username
+    def __init__(self, jwt, uuid):
         self.jwt = jwt
         self.session = requests.Session()
         self.leader_data = None
@@ -71,12 +67,16 @@ class Duolingo(object):
             requests.cookies.create_cookie("jwt_token", jwt)
         )
 
+        username = self.get_username(uuid)
+
+        self.username = username
         self.user_url = "https://duolingo.com/users/%s" % self.username  ## JASchilz
 
         self.user_data = Struct(**self._get_data())
 
+
     def _make_req(self, url, data=None):
-        headers = {}
+        headers = {'Connection': 'close'}
         req = requests.Request('POST' if data else 'GET',
                                url,
                                json=data,
@@ -84,6 +84,20 @@ class Duolingo(object):
                                cookies=self.session.cookies)
         prepped = req.prepare()
         return self.session.send(prepped)
+
+    def get_username(self, uuid: str):
+        """
+        Get user's username stream from
+        ``hhttps://www.duolingo.com/2017-06-30/users/<uuid>?fields=username``
+        """
+        url = "https://www.duolingo.com/2017-06-30/users/{}?fields=username"
+        url = url.format(uuid)
+        request = self._make_req(url)
+
+        try:
+            return request.json()['username']
+        except:
+            raise Exception('Could not get username')
 
     def get_activity_stream(self, before=None):
         """
