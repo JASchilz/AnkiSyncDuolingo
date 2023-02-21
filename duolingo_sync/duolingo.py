@@ -58,15 +58,18 @@ class LoginFailedException(Exception):
 
 
 class Duolingo(object):
-    def __init__(self, username, password=None):
+    def __init__(self, username, jwt=None):
+        # Consoles typically print this with a wrapping `'` character
+        jwt = jwt.replace("'", '')
+
         self.username = username
-        self.password = password
+        self.jwt = jwt
         self.session = requests.Session()
         self.leader_data = None
-        self.jwt = None
 
-        if password:
-            self._login()
+        self.session.cookies.set_cookie(
+            requests.cookies.create_cookie("jwt_token", jwt)
+        )
 
         self.user_url = "https://duolingo.com/users/%s" % self.username  ## JASchilz
 
@@ -74,8 +77,6 @@ class Duolingo(object):
 
     def _make_req(self, url, data=None):
         headers = {}
-        if self.jwt is not None:
-            headers['Authorization'] = 'Bearer ' + self.jwt
         req = requests.Request('POST' if data else 'GET',
                                url,
                                json=data,
@@ -83,22 +84,6 @@ class Duolingo(object):
                                cookies=self.session.cookies)
         prepped = req.prepare()
         return self.session.send(prepped)
-
-    def _login(self):
-        """
-        Authenticate through ``https://www.duolingo.com/login``.
-        """
-        login_url = "https://www.duolingo.com/login"
-        data = {"login": self.username, "password": self.password}
-        request = self._make_req(login_url, data)
-        attempt = request.json()
-
-        if 'failure' not in attempt:
-            self.username = attempt['username']  ## JASchilz
-            self.jwt = request.headers['jwt']
-            return True
-
-        raise LoginFailedException("Login failed")  ## JASchilz
 
     def get_activity_stream(self, before=None):
         """
@@ -451,8 +436,8 @@ class Duolingo(object):
 
     def get_vocabulary(self, language_abbr=None):
         """Get overview of user's vocabulary in a language."""
-        if not self.password:
-            raise Exception("You must provide a password for this function")
+        if not self.jwt:
+            raise Exception("You must provide a JWT for this function")
         if language_abbr and not self._is_current_language(language_abbr):
             self._switch_language(language_abbr)
 
@@ -524,8 +509,8 @@ class Duolingo(object):
                                            word)
 
     def get_related_words(self, word, language_abbr=None):
-        if not self.password:
-            raise Exception("You must provide a password for this function")
+        if not self.jwt:
+            raise Exception("You must provide a JWT for this function")
         if language_abbr and not self._is_current_language(language_abbr):
             self._switch_language(language_abbr)
 

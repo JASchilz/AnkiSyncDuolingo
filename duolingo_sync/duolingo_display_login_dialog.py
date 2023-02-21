@@ -25,11 +25,26 @@ def duolingo_display_login_dialog(mw):
     <p><strong>Due to recent changes in the Duolingo service, this plugin is unable to provide translations for your vocabulary.</strong>
     You can edit in the translations on your first review. See <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues/61">this support issue</a>
     for more information.</p>
+
+    <p>Due to changes to the Duolingo service, you must enter your JWT to authenticate with Duolingo. See <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues/64">
+    this support issue</a> for more information on authentication.</p>
+
+    <p>You can retrieve your JWT by logging into Duolingo in a browser and then pasting the following script into your browser's
+    developer console on <a href="https://www.duolingo.com/">www.duolingo.com</a>:</p>
+
+    <pre>
+(() => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; jwt_token=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+})()
+    </pre>
     
     <hr>
 
-    <p>Please enter your <strong>Duolingo</strong> username and password.</p>
+    <p>Please enter your <strong>Duolingo</strong> username and JWT.</p>
     """)
+    l.setTextInteractionFlags(Qt.TextSelectableByMouse)
     l.setOpenExternalLinks(True)
     l.setWordWrap(True)
     vbox.addWidget(l)
@@ -39,7 +54,7 @@ def duolingo_display_login_dialog(mw):
     g.addWidget(l1, 0, 0)
     user = QLineEdit()
     g.addWidget(user, 0, 1)
-    l2 = QLabel(_("Duolingo Password:"))
+    l2 = QLabel(_("Duolingo JWT:"))
     g.addWidget(l2, 1, 0)
     passwd = QLineEdit()
     passwd.setEchoMode(QLineEdit.Password)
