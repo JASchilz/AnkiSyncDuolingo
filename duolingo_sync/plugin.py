@@ -64,14 +64,12 @@ def login_and_retrieve_vocab(username, password) -> VocabRetrieveResult:
                 """
                 <p>Logging in to Duolingo failed. Please check your Duolingo credentials.</p>
 
-                <p>Having trouble logging in? You must use your <i>Duolingo</i> username and password.
+                <p>Having trouble logging in? You must use your <i>Duolingo</i> username and JWT.
                 You <i>can't</i> use your Google or Facebook credentials, even if that's what you use to
                 sign in to Duolingo.</p>
 
                 <p>You can find your Duolingo username at
-                <a href="https://www.duolingo.com/settings">https://www.duolingo.com/settings</a> and you
-                can create or set your Duolingo password at
-                <a href="https://www.duolingo.com/settings/password">https://www.duolingo.com/settings/password</a>.</p>
+                <a href="https://www.duolingo.com/settings">https://www.duolingo.com/settings</a>.</p>
                 """
             )
         )
