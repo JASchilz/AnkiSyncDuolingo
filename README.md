@@ -28,9 +28,13 @@ After installing the addon and restarting Anki, you can now select the `Pull fro
 
 If it's your first time using the addon, `Pull from Duolingo` will ask your permission to create its custom note type.
 
-`Pull from Duolingo` will then ask you to log in to Duolingo. The addon will only sync in Duolingo words that you've already learned.
+`Pull from Duolingo` will then ask you to log in to Duolingo. The addon will only sync in Duolingo words that you've already learned. **This add-on will only pull in words that you've already learned**. As you learn more words in Duolingo, use this add-on again to pull those words in Anki.
 
-**This add-on will only pull in words that you've already learned**. As you learn more words in Duolingo, use this add-on again to pull those words in Anki.
+### Translations
+
+This plugin does not provide translations: it only provides the words you've learned in the language that you're learning. This is because Duolingo does not make translations available to applications like this plugin. So after importing your cards, on your first review you'll need to provide the translation for the cards that you've imported.
+
+Alternately, [some users have shared work flows for bulk translating the cards from this plugin using external services like Google Translate](https://github.com/JASchilz/AnkiSyncDuolingo/issues/61).
 
 ### Managing Notes
 
