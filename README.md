@@ -2,7 +2,7 @@
 # AnkiSyncDuolingo
 Pull words you've learned from Duolingo into Anki 2.1.50+
 
-🔴 **NOTICE**: Because of recent changes to the Duolingo service, this plugin is no longer able to retrieve translations from Duolingo. Because of the holidays, Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/61 for more information. 🔴
+🔴 **NOTICE**: Because of recent changes by Duolingo, this plugin is now **unstable** and you may encounter problems when trying to log into Duolingo. Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/64 for more information. 🔴
 
 ## Installing
 
@@ -28,7 +28,7 @@ After installing the addon and restarting Anki, you can now select the `Pull fro
 
 If it's your first time using the addon, `Pull from Duolingo` will ask your permission to create its custom note type.
 
-`Pull from Duolingo` will then ask for your Duolingo credentials. The addon will only sync in Duolingo words that you've already learned. As you learn more words in Duolingo, use the `Sync Duolingo` tool again to pull those new words into Anki.
+`Pull from Duolingo` will then ask you to log in to Duolingo. The addon will only sync in Duolingo words that you've already learned.
 
 **This add-on will only pull in words that you've already learned**. As you learn more words in Duolingo, use this add-on again to pull those words in Anki.
 
