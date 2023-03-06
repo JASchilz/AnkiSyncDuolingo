@@ -185,6 +185,33 @@ def on_retrieve_success(retrieve_result: VocabRetrieveResult):
 
 
 def sync_duolingo():
+    aqt.mw.taskman.run_on_main(
+        lambda: showWarning(
+            """
+            <p><u>Warning, due to recent changes made by Duolingo in their code this plugin is now
+            <span style="color: red">unstable</span></u>. Specifically:
+            <ul>
+            <li>You may have problems logging in. You might be able to fix these problems, or it might be
+            impossible for your account to log in at all.</li>
+            <li>In particular, it might not be possible for accounts that were created with Google or Facebook to use
+            this plugin.</li>
+            <li>You may encounter unhelpful error messages.</li>
+            </p>
+            
+            <p>If possible, we will work to resolve these issues. However, some issues may be impossible to resolve
+            or take weeks to resolve. You can follow this issue <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues/64">
+            here</a>. If you are encountering symptoms that are not described in that issue, then please chime in to
+            describe your problem.</p>
+            
+            <p>To see any other issues or open a new issue, see <a href="https://github.com/JASchilz/AnkiSyncDuolingo/issues">
+            the issue tracker</a>.</p>
+            
+            <p>Click "OK" to log in to Duolingo. Note that you <u>must log in with your Duolingo username and password</u> and
+            <b>not log in with Google or Facebook</b>. You can view your username and set a password in <a href="https://www.duolingo.com/settings/account">
+            your Duolingo account profile</a>.
+            """
+        )
+    )
     try:
         username, password = duolingo_display_login_dialog(mw)
     except TypeError:
