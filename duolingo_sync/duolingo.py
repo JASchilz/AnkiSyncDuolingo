@@ -58,24 +58,25 @@ class LoginFailedException(Exception):
 
 
 class Duolingo(object):
-    def __init__(self, username, password=None):
-        self.username = username
-        self.password = password
+    def __init__(self, jwt, uuid):
+        self.jwt = jwt
         self.session = requests.Session()
         self.leader_data = None
-        self.jwt = None
 
-        if password:
-            self._login()
+        self.session.cookies.set_cookie(
+            requests.cookies.create_cookie("jwt_token", jwt)
+        )
 
+        username = self.get_username(uuid)
+
+        self.username = username
         self.user_url = "https://duolingo.com/users/%s" % self.username  ## JASchilz
 
         self.user_data = Struct(**self._get_data())
 
+
     def _make_req(self, url, data=None):
-        headers = {}
-        if self.jwt is not None:
-            headers['Authorization'] = 'Bearer ' + self.jwt
+        headers = {'Connection': 'close'}
         req = requests.Request('POST' if data else 'GET',
                                url,
                                json=data,
@@ -84,21 +85,19 @@ class Duolingo(object):
         prepped = req.prepare()
         return self.session.send(prepped)
 
-    def _login(self):
+    def get_username(self, uuid: str):
         """
-        Authenticate through ``https://www.duolingo.com/login``.
+        Get user's username stream from
+        ``hhttps://www.duolingo.com/2017-06-30/users/<uuid>?fields=username``
         """
-        login_url = "https://www.duolingo.com/login"
-        data = {"login": self.username, "password": self.password}
-        request = self._make_req(login_url, data)
-        attempt = request.json()
+        url = "https://www.duolingo.com/2017-06-30/users/{}?fields=username"
+        url = url.format(uuid)
+        request = self._make_req(url)
 
-        if 'failure' not in attempt:
-            self.username = attempt['username']  ## JASchilz
-            self.jwt = request.headers['jwt']
-            return True
-
-        raise LoginFailedException("Login failed")  ## JASchilz
+        try:
+            return request.json()['username']
+        except:
+            raise Exception('Could not get username')
 
     def get_activity_stream(self, before=None):
         """
@@ -451,8 +450,8 @@ class Duolingo(object):
 
     def get_vocabulary(self, language_abbr=None):
         """Get overview of user's vocabulary in a language."""
-        if not self.password:
-            raise Exception("You must provide a password for this function")
+        if not self.jwt:
+            raise Exception("You must provide a JWT for this function")
         if language_abbr and not self._is_current_language(language_abbr):
             self._switch_language(language_abbr)
 
@@ -524,8 +523,8 @@ class Duolingo(object):
                                            word)
 
     def get_related_words(self, word, language_abbr=None):
-        if not self.password:
-            raise Exception("You must provide a password for this function")
+        if not self.jwt:
+            raise Exception("You must provide a JWT for this function")
         if language_abbr and not self._is_current_language(language_abbr):
             self._switch_language(language_abbr)
 
