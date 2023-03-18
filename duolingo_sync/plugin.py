@@ -4,6 +4,7 @@ from typing import Optional, List
 
 import requests.exceptions
 from anki.utils import splitFields, ids2str
+from anki.decks import DEFAULT_DECK_ID
 
 import aqt
 from aqt import mw
@@ -83,7 +84,7 @@ def login_and_retrieve_vocab(username, password) -> VocabRetrieveResult:
     language_string = vocabulary_response['language_string']
     vocabs = vocabulary_response['vocab_overview']
 
-    did = mw.col.decks.id("Default")
+    did = mw.col.decks.get(DEFAULT_DECK_ID)['id']
     mw.col.decks.select(did)
 
     deck = mw.col.decks.get(did)
