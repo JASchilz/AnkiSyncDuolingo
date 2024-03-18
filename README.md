@@ -2,7 +2,7 @@
 # AnkiSyncDuolingo
 Pull words you've learned from Duolingo into Anki 2.1.50+
 
-🔴 **NOTICE**: Because of recent changes by Duolingo, this plugin is now **unstable** and you may encounter problems when trying to log into Duolingo. Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/64 for more information. 🔴
+🔴 **NOTICE**: Because of recent changes by Duolingo, this plugin is now **broken** and you may encounter problems when trying to pull your vocabulary from Duolingo. Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/76 for more information. 🔴
 
 ## Installing
 
