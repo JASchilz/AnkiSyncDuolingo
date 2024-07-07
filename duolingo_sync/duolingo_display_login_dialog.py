@@ -1,5 +1,4 @@
-from .jwt import decode
-from pprint import pprint
+from duolingo_sync.duolingo.jwt import decode
 from aqt import AnkiQt
 from aqt.qt import *
 
@@ -12,11 +11,9 @@ def duolingo_display_login_dialog(mw: AnkiQt):
     url = "https://www.duolingo.com/"
 
     token = None
-    uuid = None
 
     def on_cookie_added(cookie) -> None:
         nonlocal token
-        nonlocal uuid
 
         if cookie.name() == b"jwt_token":
             token = bytes(cookie.value()).decode()
@@ -46,10 +43,7 @@ def duolingo_display_login_dialog(mw: AnkiQt):
     d.show()
     d.exec()
 
-    decoded = decode(token, algorithms=["HS256"], options={"verify_signature": False})
-    uuid = decoded["sub"]
-
     webview.destroy()
 
-    return token, uuid
+    return token
 
