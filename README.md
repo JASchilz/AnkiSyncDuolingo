@@ -1,5 +1,10 @@
 
 # AnkiSyncDuolingo
+
+![Python](https://img.shields.io/badge/Python-3-3776AB?style=flat-square&logo=python&logoColor=white)
+![Anki](https://img.shields.io/badge/Anki-add--on-2496ED?style=flat-square)
+![Duolingo](https://img.shields.io/badge/Duolingo-vocabulary-58CC02?style=flat-square&logo=duolingo&logoColor=white)
+![License: MIT](https://img.shields.io/badge/license-MIT-yellow?style=flat-square)
 Pull words you've learned from Duolingo into Anki 2.1.50+
 
 🔴 **NOTICE**: Because of recent changes by Duolingo, this plugin is now **broken** and you may encounter problems when trying to pull your vocabulary from Duolingo. Follow https://github.com/JASchilz/AnkiSyncDuolingo/issues/76 for more information. 🔴
