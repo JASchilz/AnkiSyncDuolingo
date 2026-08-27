@@ -34,8 +34,27 @@ def duolingo_display_login_dialog(mw: AnkiQt):
     cookie_store.deleteAllCookies()  # May want to remove once working
     cookie_store.cookieAdded.connect(on_cookie_added)
 
-    webpage = QWebEnginePage(profile, webview)
+    popups = []
 
+    class CustomWebPage(QWebEnginePage):
+        def createWindow(self, _type):
+            popup = QWebEngineView()
+            popup.setWindowTitle("Login Popup")
+            popup.resize(800, 600)
+
+            new_page = QWebEnginePage(profile, popup)
+            popup.setPage(new_page)
+
+            popups.append(popup)
+
+            popup.show()
+
+            popup.destroyed.connect(lambda: popups.remove(popup) if popup in popups else None)
+
+            return new_page
+
+    webpage = CustomWebPage(profile, webview)
+    
     webview.setPage(webpage)
     webview.load(QUrl(url))
 
@@ -45,11 +64,15 @@ def duolingo_display_login_dialog(mw: AnkiQt):
 
     d.show()
     d.exec()
-
-    decoded = decode(token, algorithms=["HS256"], options={"verify_signature": False})
-    uuid = decoded["sub"]
-
+    
     webview.destroy()
 
-    return token, uuid
+    # --- Clean up popups ---
+    for popup in popups:
+        try:
+            popup.close()
+            popup.deleteLater()
+        except Exception:
+            pass
 
+    return token
